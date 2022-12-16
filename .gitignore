@@ -1,0 +1,21 @@
+# Venv
+/.venv
+
+# Sensitive
+/.env
+/*.session
+/.tgbot_data
+
+# IDE Related
+/.idea
+/.vscode
+
+# Temporary Files
+__pycache__
+/.trash
+/.upload
+/*.session-journal
+
+# Development
+/openapi.json
+/experiment.py
