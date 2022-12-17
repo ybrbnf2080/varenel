@@ -3,8 +3,7 @@
 
 # Sensitive
 /.env
-/*.session
-/.tgbot_data
+*.csv
 
 # IDE Related
 /.idea
