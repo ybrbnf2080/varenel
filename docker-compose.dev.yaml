@@ -1,0 +1,69 @@
+version: "3.1"
+
+services:
+
+
+  # nginx:
+  #   build: .docker/nginx
+  #   restart: always
+  #   container_name: telegram_controller_backend_nginx
+
+  #   depends_on:
+  #     - app
+  #   environment:
+  #     - NGINX_HOST=${HOST_NAME}
+  #     - NGINX_PORT=${EXTERNAL_PORT}
+  #   volumes:
+  #     - ./.upload:/www/static/.upload
+  #   ports:
+  #     - "${EXTERNAL_IP}:${EXTERNAL_PORT}:${EXTERNAL_PORT}"
+  #   networks:
+  #     bridge:
+
+  # app:
+  #   build: .
+  #   image: telegram_controller_backend_app
+
+  #   depends_on:
+  #     - postgres
+  #   env_file:
+  #     - .env
+  #   environment:
+  #     - POSTGRES_HOST=postgres
+  #     - UPLOAD_PATH=.upload
+  #   ports:
+  #     - "8000:8000"
+  #   volumes:
+  #     - ./:/app
+  #   networks:
+  #     bridge:
+  #   command: [ "uvicorn", "src.api.main:api", "--port", "8000", "--host", "0.0.0.0", "--factory", "--reload" ]
+
+  postgres:
+    image: postgres:14
+    restart: always
+
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    ports:
+      - ${POSTGRES_PORT}:5432
+    volumes:
+      - pg_data:/var/lib/postgresql/data/
+    networks:
+      bridge:
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+    networks:
+      bridge:
+
+networks:
+  bridge:
+
+volumes:
+  pg_data:

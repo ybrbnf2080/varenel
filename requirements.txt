@@ -1,3 +1,15 @@
+# Database
+SQLAlchemy~=2.0.0b3
+asyncpg~=0.27.0
+
+
+# Migrations
+alembic[tz]~=1.8.1
+alembic-utils~=0.7.8
+alembic
+
 # Model
 pydantic~=1.10.2
 dataclass_factory~=2.16
+
+
