@@ -2,12 +2,12 @@ from typing import List
 
 import asyncpg
 from sqlalchemy import delete, exc, select, update
-from src.lib.errors.base import NotFoundError
 
 from src.database.models.try_festival import (
     TryFestivalDatabase,
 )
 from src.lib.enums import OffsetType
+from src.lib.errors.base import NotFoundError
 from src.lib.models import TryFestival
 from src.lib.pagination import (
     add_pagination,
@@ -32,8 +32,12 @@ class TryFestivalRepository(BaseDBRepo):
             await self._session.refresh(try_festival)
 
         except exc.IntegrityError as exception:
-            if isinstance(exception.orig.__context__, asyncpg.exceptions.ForeignKeyViolationError):
-                raise NotFoundError(message=f"Forgein key error: '{exception.orig.__context__.detail}'")
+            if isinstance(
+                exception.orig.__context__, asyncpg.exceptions.ForeignKeyViolationError
+            ):
+                raise NotFoundError(
+                    message=f"Forgein key error: '{exception.orig.__context__.detail}'"
+                )
             raise exception
         return self.orm_to_dto(try_festival)
 
@@ -67,7 +71,7 @@ class TryFestivalRepository(BaseDBRepo):
             [self.orm_to_dto(try_festival) for try_festival in try_festivals],
             offset_type=offset_type,
         )
-        
+
     async def delete(self, try_id: int) -> None:
         """Delete photo by id. Raise error if photo is not found."""
         statement = (
@@ -82,7 +86,6 @@ class TryFestivalRepository(BaseDBRepo):
             raise NotFoundError(f"Try not found")
 
         await self._session.commit()
-
 
     @staticmethod
     def orm_to_dto(orm_model: TryFestivalDatabase) -> TryFestival:

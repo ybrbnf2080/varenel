@@ -3,11 +3,14 @@ from typing import List
 import asyncpg
 from sqlalchemy import delete, exc, select, update
 
-from src.lib.errors.base import AlreadyExistsError, NotFoundError
 from src.database.models.result_participant import (
     ResultParticipantDatabase,
 )
 from src.lib.enums import OffsetType
+from src.lib.errors.base import (
+    AlreadyExistsError,
+    NotFoundError,
+)
 from src.lib.models import ResultParticipant
 from src.lib.pagination import (
     add_pagination,
@@ -29,10 +32,14 @@ class ResultParticipantRepository(BaseDBRepo):
             await self._session.commit()
             await self._session.refresh(result_participant)
         except exc.IntegrityError as exception:
-            if isinstance(exception.orig.__context__, asyncpg.exceptions.ForeignKeyViolationError):
-                raise NotFoundError(message=f"Forgein key error: '{exception.orig.__context__.detail}'")
+            if isinstance(
+                exception.orig.__context__, asyncpg.exceptions.ForeignKeyViolationError
+            ):
+                raise NotFoundError(
+                    message=f"Forgein key error: '{exception.orig.__context__.detail}'"
+                )
             raise exception
-        
+
         return self.orm_to_dto(result_participant)
 
     async def get(self, result_participant_id: int) -> ResultParticipant:
@@ -40,13 +47,14 @@ class ResultParticipantRepository(BaseDBRepo):
         query = select(ResultParticipantDatabase).where(
             ResultParticipantDatabase.id == result_participant_id,
         )
-        
+
         try:
             result = await self._session.execute(query)
             result_participant = result.scalar_one_or_none()
         except exc.IntegrityError:
-            raise NotFoundError(f"Participant for number {result_participant_id} not found")
-
+            raise NotFoundError(
+                f"Participant for number {result_participant_id} not found"
+            )
 
         return self.orm_to_dto(result_participant)
 

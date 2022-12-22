@@ -5,7 +5,9 @@ from typing import List
 from fastapi import APIRouter, Depends
 from starlette import status
 
-from src.api.providers import get_result_participant_repository
+from src.api.providers import (
+    get_result_participant_repository,
+)
 from src.api.schemas import errors
 from src.database.repo import ResultParticipantRepository
 from src.lib import enums, models
@@ -29,7 +31,9 @@ async def get_result_participants(
     offset_type: enums.OffsetType,
     offset_id: int = 0,
     limit: int = 10,
-    result_participant_service: ResultParticipantRepository = Depends(get_result_participant_repository),
+    result_participant_service: ResultParticipantRepository = Depends(
+        get_result_participant_repository
+    ),
 ) -> List[models.ResultParticipant]:
     """Get all result_participants"""
 
@@ -54,7 +58,9 @@ async def get_result_participants(
 )
 async def create_result_participant(
     request: models.ResultParticipant,
-    result_participant_service: ResultParticipantRepository = Depends(get_result_participant_repository),
+    result_participant_service: ResultParticipantRepository = Depends(
+        get_result_participant_repository
+    ),
 ) -> models.ResultParticipant:
     """Create result_participant"""
     new_result_participant = await result_participant_service.create(request)
@@ -72,11 +78,15 @@ async def create_result_participant(
 )
 async def get_result_participant(
     result_participant_id: int,
-    result_participant_service: ResultParticipantRepository = Depends(get_result_participant_repository),
+    result_participant_service: ResultParticipantRepository = Depends(
+        get_result_participant_repository
+    ),
 ) -> models.ResultParticipant:
     """Get result_participant by ID"""
 
-    result_participant = await result_participant_service.get(result_participant_id=result_participant_id)
+    result_participant = await result_participant_service.get(
+        result_participant_id=result_participant_id
+    )
     return result_participant
 
 

@@ -1,4 +1,5 @@
 from fastapi.security import api_key
+
 from src.lib.config import env
 from src.lib.config.entities import (
     ApplicationData,
