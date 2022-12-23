@@ -58,7 +58,7 @@ class RelsultCalcService:
             total_time = timedelta(seconds=0)
             for i in results:
                 total_time += i.time
-            
+
             final_results.append(
                 ResultParticipant(
                     participant_number=participant.number,
@@ -66,13 +66,10 @@ class RelsultCalcService:
                     total_time=total_time,
                 )
             )
-            
+
             print(final_results[-1])
-            
-            
-        for_time_result = sorted(
-            final_results, key=lambda result: result.total_time
-        )
+
+        for_time_result = sorted(final_results, key=lambda result: result.total_time)
         final_results = sorted(
             for_time_result, key=lambda result: result.point, reverse=True
         )
@@ -86,11 +83,11 @@ class RelsultCalcService:
         self, group: enums.Group
     ) -> List[SuperResultParticipant]:
         results = await self._result_participant_repo.get_by_group(group=group)
-        for_time_result = sorted(
-            results, key=lambda result: result.total_time
+        for_time_result = sorted(results, key=lambda result: result.total_time)
+        final_results = sorted(
+            for_time_result, key=lambda result: result.point, reverse=True
         )
-        final_results = sorted(for_time_result, key=lambda result: result.point, reverse=True)
-        
+
         for i, result in enumerate(final_results):
             result.order = i + 1
             final_results[i] = result

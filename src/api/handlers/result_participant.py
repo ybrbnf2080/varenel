@@ -4,15 +4,17 @@ from typing import List
 
 from fastapi import APIRouter, Depends
 from starlette import status
-from src.api.providers.services import get_result_calc_service
-from src.service.result_calc import RelsultCalcService
 
 from src.api.providers import (
     get_result_participant_repository,
 )
+from src.api.providers.services import (
+    get_result_calc_service,
+)
 from src.api.schemas import errors
 from src.database.repo import ResultParticipantRepository
 from src.lib import enums, models
+from src.service.result_calc import RelsultCalcService
 
 
 result_participants_router = APIRouter(
@@ -70,7 +72,7 @@ async def create_result_participant(
 
 
 @result_participants_router.get(
-    path="/{group}",
+    path="/group/{group}",
     responses={
         status.HTTP_200_OK: {"model": List[models.ResultParticipant]},
         status.HTTP_404_NOT_FOUND: {"model": errors.NotFoundError},
@@ -80,16 +82,13 @@ async def create_result_participant(
 )
 async def get_result_participant(
     group: enums.Group,
-    result_calc_service: RelsultCalcService = Depends(
-        get_result_calc_service
-    ),
+    result_calc_service: RelsultCalcService = Depends(get_result_calc_service),
 ) -> List[models.ResultParticipant]:
     """Get result_participant by ID"""
 
-    result_participant = await result_calc_service.get_result_by_group(
-        group=group
-    )
+    result_participant = await result_calc_service.get_result_by_group(group=group)
     return result_participant
+
 
 @result_participants_router.get(
     path="/{result_participant_id}",
@@ -131,4 +130,3 @@ async def get_result_participant(
 #     """Delete result_participant by ID"""
 #     await result_participant_service.delete(try_id=result_participant_id)
 # get_result_calc_service
-

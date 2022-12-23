@@ -59,7 +59,11 @@ class TryFestivalRepository(BaseDBRepo):
         query = (
             select(TryFestivalDatabase)
             .where(TryFestivalDatabase.participant_number == participant_id)
-            .order_by(TryFestivalDatabase.track, TryFestivalDatabase.time, TryFestivalDatabase.result.desc())
+            .order_by(
+                TryFestivalDatabase.track,
+                TryFestivalDatabase.time,
+                TryFestivalDatabase.result.desc(),
+            )
             .distinct(TryFestivalDatabase.track)
         )
         result = await self._session.execute(query)

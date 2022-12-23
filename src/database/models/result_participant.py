@@ -1,5 +1,5 @@
-from datetime import timedelta
 import typing as tp
+from datetime import timedelta
 
 import sqlalchemy as sa
 from sqlalchemy.orm import (
@@ -12,7 +12,7 @@ from .base import Base, ReprMixin, TimestampMixin
 
 
 if tp.TYPE_CHECKING:
-    from .partipicant import ParticipantDatabase
+    from .participant import ParticipantDatabase
 
 
 class ResultParticipantDatabase(TimestampMixin, Base, ReprMixin):

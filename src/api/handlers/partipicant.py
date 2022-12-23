@@ -60,6 +60,20 @@ async def create_participant(
     new_participant = await participant_service.create(request)
     return new_participant
 
+@participants_router.get(
+    path="/group/{group}",
+    response_model=List[models.Participant],
+    summary="Get participants",
+    description="Get all participants",
+)
+async def get_participants(
+    group: enums.Group,
+    participant_service: ParticipantRepository = Depends(get_participant_repository),
+) -> List[models.Participant]:
+    """Get all participants"""
+
+    return await participant_service.get_all_from_group(group=group)
+
 
 @participants_router.get(
     path="/{participant_id}",

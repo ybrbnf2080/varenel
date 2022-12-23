@@ -9,5 +9,3 @@ def get_config() -> Config:
 
 def get_session_factory() -> AsyncSession:
     ...
-
-

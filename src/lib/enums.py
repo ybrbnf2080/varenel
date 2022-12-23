@@ -22,6 +22,12 @@ class Group(enum.Enum):
     WOMAN_MICRO = "девочки  2016-2017 (5 -6 лет)"
 
 
+class Color(enum.Enum):
+    ORANGE = "orange"
+    BLACK = "black"
+    WHITE = "white"
+
+
 class OffsetType(enum.Enum):
     FIRST = "first"
     NEXT = "next"

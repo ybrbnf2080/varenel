@@ -5,6 +5,7 @@ from typing import List
 
 import aiohttp
 from aiohttp.hdrs import HOST
+from src.database.repo.track import TrackRepository
 
 from src.database.repo.partipicant import (
     ParticipantRepository,
@@ -18,8 +19,11 @@ from src.database.repo.try_festival import (
 from src.lib import enums
 from src.lib.config.parser import parse_config
 from src.lib.db import session_factory_from_url
-from src.lib.mapper import participant_from_dict, try_festival_from_dict
-from src.lib.models import Participant
+from src.lib.mapper import (
+    participant_from_dict,
+    try_festival_from_dict,
+)
+from src.lib.models import Participant, Track
 from src.service.result_calc import RelsultCalcService
 
 
@@ -32,7 +36,8 @@ def get_user_from_csv() -> List[Participant]:
     print(data_array)
     return data_array
 
-def get_user_from_csv() -> List[Participant]:
+
+def get_try_from_csv() -> List[Participant]:
     data_array = []
     with open("trys.csv", newline="") as csvfile:
         reader = csv.DictReader(csvfile)
@@ -59,9 +64,20 @@ async def create_user_from_csv() -> None:
         user_service = ParticipantRepository(
             session=session,
         )
+        track_service = TrackRepository(
+            session=session,
+        )
         for data_user in data_users:
             user = await user_service.create(data_user)
-
+        i = 1
+        for group in enums.Group:
+            for o in range(1, 5):
+                await track_service.create(dto=Track(
+                    number=i,
+                    group=group
+                ))
+                i += 1
+        
         print("patticlatn created")
 
         users = await user_service.get_all(offset_type=enums.OffsetType.FIRST)
@@ -76,7 +92,7 @@ DATA_TRY_RESULT = [
         "result": random.randint(1, 35),
         "time": f"00:{random.randint(1, 6)}:00",
     }
-    for i in range(0, 40)
+    for i in range(0, 200)
 ]
 HOST = "http://localhost:8000"
 
@@ -98,14 +114,14 @@ async def test_web_application() -> None:
     )
     if resp.ok:
         print("!!!   CONFIM!! ")
-    else: 
+    else:
         print(await resp.json())
-    
+
     print("\nfestivals GET\n")
     resp = await con.get(url=HOST + "/api/v1/try_festivals/13")
     if resp.ok:
         print("!!!   CONFIM!! ")
-    else: 
+    else:
         print(await resp.json())
     print("\nfestivals POST\n")
     resp = await con.post(
@@ -115,28 +131,27 @@ async def test_web_application() -> None:
     )
     if resp.ok:
         print("!!!   CONFIM!! ")
-    else: 
+    else:
         print(await resp.json())
-    
+
     print("\nfestivals DELETE\n")
     resp = await con.delete(
         url=HOST + "/api/v1/try_festivals/666",
     )
     if resp.ok:
         print("!!!   CONFIM!! ")
-    else: 
+    else:
         print(await resp.json())
-        
-        
+
     print("\nparticipants GET\n")
     resp = await con.get(
         url=HOST + "/api/v1/participants/?offset_type=first&offset_id=0&limit=888",
     )
     if resp.ok:
         print("!!!   CONFIM!! ")
-    else: 
+    else:
         print(await resp.json())
-        
+
     print("\nParticipant POST\n")
     resp = await con.post(
         url=HOST + "/api/v1/participants/",
@@ -157,7 +172,7 @@ async def test_web_application() -> None:
     )
     if resp.ok:
         print("!!!   CONFIM!! ")
-    else: 
+    else:
         print(await resp.json())
 
     print("\nParipicant GET\n")
@@ -167,7 +182,7 @@ async def test_web_application() -> None:
     )
     if resp.ok:
         print("!!!   CONFIM!! ")
-    else: 
+    else:
         print(await resp.json())
 
     print("\nresult Participant GET\n")
@@ -178,7 +193,7 @@ async def test_web_application() -> None:
     )
     if resp.ok:
         print("!!!   CONFIM!! ")
-    else: 
+    else:
         print(await resp.json())
 
     print("\nresult Participant GET\n")
@@ -188,7 +203,7 @@ async def test_web_application() -> None:
     )
     if resp.ok:
         print("!!!   CONFIM!! ")
-    else: 
+    else:
         print(await resp.json())
 
     print("\nResult_participants POST\n")
@@ -199,9 +214,8 @@ async def test_web_application() -> None:
     )
     if resp.ok:
         print("!!!   CONFIM!! ")
-    else: 
+    else:
         print(await resp.json())
-
 
 
 async def test_logic() -> None:
@@ -280,7 +294,7 @@ def print_results(results):
 async def test():
     # await create_user_from_csv()
     # await test_web_application()
-    await test_logic()
+    # await test_logic()
     await test_view()
 
 

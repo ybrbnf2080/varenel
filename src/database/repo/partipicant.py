@@ -4,9 +4,7 @@ from typing import List
 import asyncpg
 from sqlalchemy import delete, exc, select, update
 
-from src.database.models.partipicant import (
-    ParticipantDatabase,
-)
+from src.database.models.participant import ParticipantDatabase
 from src.lib import enums
 from src.lib.enums import OffsetType
 from src.lib.errors.base import (

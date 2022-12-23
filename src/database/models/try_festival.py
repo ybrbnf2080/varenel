@@ -13,10 +13,14 @@ class TryFestivalDatabase(TimestampMixin, Base, ReprMixin):
         sa.BigInteger, autoincrement=True, primary_key=True
     )  # id
     participant_number: Mapped[int] = mapped_column(
-        sa.BigInteger,
+        sa.Integer,
         sa.ForeignKey("participants.number", ondelete="CASCADE", onupdate="CASCADE"),
         nullable=False,
     )  # id_участникв
-    track: Mapped[int] = mapped_column(sa.Integer, nullable=False)  # трасса
+    track: Mapped[int] = mapped_column(
+        sa.Integer,
+        sa.ForeignKey("tracks.number", ondelete="CASCADE", onupdate="CASCADE"),
+        nullable=False,
+    )  # number_участникв
     result: Mapped[float] = mapped_column(sa.Float, nullable=False)  # результат
     time: Mapped[timedelta] = mapped_column(sa.Interval, nullable=False)  # время

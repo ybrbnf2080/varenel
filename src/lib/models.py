@@ -34,12 +34,21 @@ class TryFestival(BaseModel):
         orm_mode = True
 
 
+class Track(BaseModel):
+    number: int  # number_участникв
+    color: Optional[str] = None
+    group: enums.Group
+
+    class Config:
+        orm_mode = True
+
+
 class ResultParticipant(BaseModel):
     id: Optional[int] = None
     participant_number: int  # number_участникв
     point: float
     total_time: timedelta
-    
+
     class Config:
         orm_mode = True
 
