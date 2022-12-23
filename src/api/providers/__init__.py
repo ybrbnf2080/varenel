@@ -1,5 +1,4 @@
 from .dummies import (
-    get_bot_session,
     get_config,
     get_session_factory,
 )

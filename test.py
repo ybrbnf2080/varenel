@@ -1,6 +1,5 @@
 import asyncio
 import csv
-import http
 import random
 from typing import List
 
@@ -19,7 +18,7 @@ from src.database.repo.try_festival import (
 from src.lib import enums
 from src.lib.config.parser import parse_config
 from src.lib.db import session_factory_from_url
-from src.lib.mapper import participant_from_dict
+from src.lib.mapper import participant_from_dict, try_festival_from_dict
 from src.lib.models import Participant
 from src.service.result_calc import RelsultCalcService
 
@@ -30,6 +29,15 @@ def get_user_from_csv() -> List[Participant]:
         reader = csv.DictReader(csvfile)
         for i, row in enumerate(reader):
             data_array.append(participant_from_dict(id=i + 1, data=row))
+    print(data_array)
+    return data_array
+
+def get_user_from_csv() -> List[Participant]:
+    data_array = []
+    with open("trys.csv", newline="") as csvfile:
+        reader = csv.DictReader(csvfile)
+        for i, row in enumerate(reader):
+            data_array.append(try_festival_from_dict(id=i + 1, data=row))
     print(data_array)
     return data_array
 
@@ -68,7 +76,7 @@ DATA_TRY_RESULT = [
         "result": random.randint(1, 35),
         "time": f"00:{random.randint(1, 6)}:00",
     }
-    for i in range(0, 4)
+    for i in range(0, 40)
 ]
 HOST = "http://localhost:8000"
 
@@ -265,15 +273,15 @@ def print_results(results):
     for i in results:
 
         print(
-            f"  {i.order}. [{i.participant_number}] {i.participant.name} {i.participant.surname}  {i.point}"
+            f"  {i.order}. [{i.participant_number}] {i.participant.name} {i.participant.surname}  {i.point} {i.total_time}"
         )
 
 
 async def test():
-    await create_user_from_csv()
-    await test_web_application()
-    # await test_logic()
-    # await test_view()
+    # await create_user_from_csv()
+    # await test_web_application()
+    await test_logic()
+    await test_view()
 
 
 if __name__ == "__main__":

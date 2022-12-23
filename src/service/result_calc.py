@@ -1,3 +1,4 @@
+from datetime import timedelta
 from typing import Dict, List
 from unittest import result
 
@@ -54,17 +55,26 @@ class RelsultCalcService:
             print(participant)
             for i in results:
                 print(f"    {i}")
-
+            total_time = timedelta(seconds=0)
+            for i in results:
+                total_time += i.time
+            
             final_results.append(
                 ResultParticipant(
                     participant_number=participant.number,
                     point=sum(result.result for result in results),
+                    total_time=total_time,
                 )
             )
+            
             print(final_results[-1])
-
+            
+            
+        for_time_result = sorted(
+            final_results, key=lambda result: result.total_time
+        )
         final_results = sorted(
-            final_results, key=lambda result: result.point, reverse=True
+            for_time_result, key=lambda result: result.point, reverse=True
         )
         return final_results
 
@@ -76,10 +86,13 @@ class RelsultCalcService:
         self, group: enums.Group
     ) -> List[SuperResultParticipant]:
         results = await self._result_participant_repo.get_by_group(group=group)
-
-        results = sorted(results, key=lambda result: result.point, reverse=True)
-        for i, result in enumerate(results):
+        for_time_result = sorted(
+            results, key=lambda result: result.total_time
+        )
+        final_results = sorted(for_time_result, key=lambda result: result.point, reverse=True)
+        
+        for i, result in enumerate(final_results):
             result.order = i + 1
-            results[i] = result
+            final_results[i] = result
 
-        return results
+        return final_results

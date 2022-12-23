@@ -23,7 +23,7 @@ def participant_from_dict(id: int, data: dict[str, str]) -> Participant:
 
 def try_festival_from_dict(id: int, data: dict[str, str]) -> TryFestival:
     return TryFestival(
-        participant_number=data["id_участникв"],
+        participant_number=data["number_участникв"],
         track=data["трасса"],
         result=data["результат"],
         time=data["время"],

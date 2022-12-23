@@ -31,6 +31,7 @@ class ResultParticipantRepository(BaseDBRepo):
         result_participant = ResultParticipantDatabase(
             participant_number=dto.participant_number,
             point=dto.point,
+            total_time=dto.total_time,
         )
         self._session.add(result_participant)
         try:

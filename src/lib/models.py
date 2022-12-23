@@ -38,7 +38,8 @@ class ResultParticipant(BaseModel):
     id: Optional[int] = None
     participant_number: int  # number_участникв
     point: float
-
+    total_time: timedelta
+    
     class Config:
         orm_mode = True
 

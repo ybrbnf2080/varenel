@@ -1,3 +1,4 @@
+from datetime import timedelta
 import typing as tp
 
 import sqlalchemy as sa
@@ -27,6 +28,7 @@ class ResultParticipantDatabase(TimestampMixin, Base, ReprMixin):
         unique=True,
     )  # id_участникв
     point: Mapped[float] = mapped_column(sa.Float, nullable=False)
+    total_time: Mapped[timedelta] = mapped_column(sa.Interval, nullable=False)
 
     # M2O relationship
     participant: Mapped[tp.Optional["ParticipantDatabase"]] = relationship(

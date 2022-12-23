@@ -2,7 +2,6 @@ import logging
 from functools import partial
 
 import aiohttp
-from aiogram import Bot
 from fastapi import FastAPI
 
 

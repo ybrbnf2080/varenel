@@ -4,6 +4,8 @@ from typing import List
 
 from fastapi import APIRouter, Depends
 from starlette import status
+from src.api.providers.services import get_result_calc_service
+from src.service.result_calc import RelsultCalcService
 
 from src.api.providers import (
     get_result_participant_repository,
@@ -68,6 +70,28 @@ async def create_result_participant(
 
 
 @result_participants_router.get(
+    path="/{group}",
+    responses={
+        status.HTTP_200_OK: {"model": List[models.ResultParticipant]},
+        status.HTTP_404_NOT_FOUND: {"model": errors.NotFoundError},
+    },
+    summary="Get result_participants by group",
+    description="Get result_participant by group",
+)
+async def get_result_participant(
+    group: enums.Group,
+    result_calc_service: RelsultCalcService = Depends(
+        get_result_calc_service
+    ),
+) -> List[models.ResultParticipant]:
+    """Get result_participant by ID"""
+
+    result_participant = await result_calc_service.get_result_by_group(
+        group=group
+    )
+    return result_participant
+
+@result_participants_router.get(
     path="/{result_participant_id}",
     responses={
         status.HTTP_200_OK: {"model": models.ResultParticipant},
@@ -106,3 +130,5 @@ async def get_result_participant(
 # ) -> None:
 #     """Delete result_participant by ID"""
 #     await result_participant_service.delete(try_id=result_participant_id)
+# get_result_calc_service
+
