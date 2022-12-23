@@ -20,24 +20,23 @@ services:
   #   networks:
   #     bridge:
 
-  # app:
-  #   build: .
-  #   image: telegram_controller_backend_app
+  app:
+   build: .
 
-  #   depends_on:
-  #     - postgres
-  #   env_file:
-  #     - .env
-  #   environment:
-  #     - POSTGRES_HOST=postgres
-  #     - UPLOAD_PATH=.upload
-  #   ports:
-  #     - "8000:8000"
-  #   volumes:
-  #     - ./:/app
-  #   networks:
-  #     bridge:
-  #   command: [ "uvicorn", "src.api.main:api", "--port", "8000", "--host", "0.0.0.0", "--factory", "--reload" ]
+   depends_on:
+     - postgres
+   env_file:
+     - .env
+   environment:
+     - POSTGRES_HOST=postgres
+     - UPLOAD_PATH=.upload
+   ports:
+     - "8000:8000"
+   volumes:
+     - ./:/app
+   networks:
+     bridge:
+   command: [ "uvicorn", "src.api.main:api", "--port", "8000", "--host", "0.0.0.0", "--factory", "--reload" ]
 
   postgres:
     image: postgres:14

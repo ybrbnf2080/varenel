@@ -41,3 +41,11 @@ class ResultParticipant(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class SuperResultParticipant(ResultParticipant):
+    participant: Optional[Participant] = None
+    order: Optional[int] = None
+
+    class Config:
+        orm_mode = True

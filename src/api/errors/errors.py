@@ -92,6 +92,7 @@ class ApiErrorHandler:
         # Don't send telegram message if it's already `TelegramError`
 
         message = (
+            f"<b>Application</b>: <code>RNR Calc 'varenel'</code>\n"
             f"<b>Error</b>: <code>{exc.__class__.__name__}</code>\n"
             f"<b>RequestID</b>: <code>{request.state.id}</code>\n"
             f"<b>Message</b>: <code>{html.escape(str(exc))}</code>\n"

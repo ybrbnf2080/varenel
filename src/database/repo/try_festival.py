@@ -48,8 +48,23 @@ class TryFestivalRepository(BaseDBRepo):
         )
         result = await self._session.execute(query)
         try_festival = result.scalar_one_or_none()
-
+        if not try_festival:
+            raise NotFoundError(f"TryFestival for number {try_festival_id} not found")
         return self.orm_to_dto(try_festival)
+
+    async def get_best_result_from_participant_id(
+        self, participant_id: int
+    ) -> List[TryFestival]:
+        """Get all try_festivals."""
+        query = (
+            select(TryFestivalDatabase)
+            .where(TryFestivalDatabase.participant_number == participant_id)
+            .order_by(TryFestivalDatabase.track, TryFestivalDatabase.result.desc())
+            .distinct(TryFestivalDatabase.track)
+        )
+        result = await self._session.execute(query)
+        try_festivals: List[TryFestivalDatabase] = result.scalars().all()
+        return [self.orm_to_dto(try_festival) for try_festival in try_festivals]
 
     async def get_all(
         self, offset_type: OffsetType, offset_id: int = 0, limit: int = 10

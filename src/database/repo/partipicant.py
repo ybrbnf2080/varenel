@@ -7,6 +7,7 @@ from sqlalchemy import delete, exc, select, update
 from src.database.models.partipicant import (
     ParticipantDatabase,
 )
+from src.lib import enums
 from src.lib.enums import OffsetType
 from src.lib.errors.base import (
     AlreadyExistsError,
@@ -87,6 +88,14 @@ class ParticipantRepository(BaseDBRepo):
             raise NotFoundError(f"Participant for number {participant_id} not found")
 
         return self.orm_to_dto(participant)
+
+    async def get_all_from_group(self, group: enums.Group) -> List[Participant]:
+        """Get all participants."""
+        query = select(ParticipantDatabase).where(ParticipantDatabase.group == group)
+
+        result = await self._session.execute(query)
+        participants: List[ParticipantDatabase] = result.scalars().all()
+        return [self.orm_to_dto(participant) for participant in participants]
 
     async def get_all(
         self, offset_type: OffsetType, offset_id: int = 0, limit: int = 10

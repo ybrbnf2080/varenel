@@ -1,4 +1,4 @@
-CODE_DIR := src
+CODE_DIR := src test.py
 
 .PHONY: format
 format:

@@ -1,6 +1,5 @@
 import logging
 
-import aiogram
 import aiohttp
 from fastapi import FastAPI
 

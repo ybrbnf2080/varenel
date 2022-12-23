@@ -57,7 +57,7 @@ async def create_participant(
     participant_service: ParticipantRepository = Depends(get_participant_repository),
 ) -> models.Participant:
     """Create participant"""
-    new_participant = await participant_service.create(request=request)
+    new_participant = await participant_service.create(request)
     return new_participant
 
 

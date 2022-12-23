@@ -2,11 +2,21 @@ import typing as tp
 from datetime import date
 
 import sqlalchemy as sa
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import (
+    Mapped,
+    mapped_column,
+    relationship,
+)
 
 from src.lib import enums
 
 from .base import Base, ReprMixin, TimestampMixin
+
+
+if tp.TYPE_CHECKING:
+    from .result_participant import (
+        ResultParticipantDatabase,
+    )
 
 
 class ParticipantDatabase(TimestampMixin, Base, ReprMixin):
@@ -31,3 +41,10 @@ class ParticipantDatabase(TimestampMixin, Base, ReprMixin):
         sa.Enum(enums.Group), nullable=False
     )  # Группа
     couch: Mapped[str] = mapped_column(sa.String, nullable=False)  # Тренер
+
+    # O2M relationships
+    results: Mapped[tp.List["ResultParticipantDatabase"]] = relationship(
+        argument="ResultParticipantDatabase",
+        back_populates="participant",
+        uselist=True,
+    )
