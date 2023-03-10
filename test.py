@@ -4,7 +4,6 @@ import random
 from typing import List
 
 import aiohttp
-from aiohttp.hdrs import HOST
 from src.database.repo.track import TrackRepository
 
 from src.database.repo.partipicant import (
@@ -29,7 +28,7 @@ from src.service.result_calc import RelsultCalcService
 
 def get_user_from_csv() -> List[Participant]:
     data_array = []
-    with open("names.csv", newline="") as csvfile:
+    with open("man.csv", newline="") as csvfile:
         reader = csv.DictReader(csvfile)
         for i, row in enumerate(reader):
             data_array.append(participant_from_dict(id=i + 1, data=row))
@@ -77,7 +76,8 @@ async def create_user_from_csv() -> None:
                     group=group
                 ))
                 i += 1
-        
+
+
         print("patticlatn created")
 
         users = await user_service.get_all(offset_type=enums.OffsetType.FIRST)
@@ -87,7 +87,7 @@ async def create_user_from_csv() -> None:
 
 DATA_TRY_RESULT = [
     {
-        "participant_number": random.randint(1, 18),
+        "participant_number": random.randint(1, 13),
         "track": random.randint(1, 5),
         "result": random.randint(1, 35),
         "time": f"00:{random.randint(1, 6)}:00",
@@ -104,8 +104,9 @@ async def test_web_application() -> None:
         resp = await con.post(
             url=HOST + "/api/v1/try_festivals/",
             json=data_i,
-            headers={"Content-Type": "application/json"},
+            headers={"Content-Type": "application/json", "X-API-Key": "SosiBibu"},
         )
+        # await asyncio.sleep(1)
         print(await resp.json())
 
     print("\nfestivals GET_ALL\n")
@@ -127,7 +128,7 @@ async def test_web_application() -> None:
     resp = await con.post(
         url=HOST + "/api/v1/try_festivals/",
         json={"participant_number": 18, "track": 4, "result": 14, "time": "00:8:00"},
-        headers={"Content-Type": "application/json"},
+        headers={"Content-Type": "application/json", "X-API-Key": "SosiBibu"},
     )
     if resp.ok:
         print("!!!   CONFIM!! ")
@@ -168,7 +169,7 @@ async def test_web_application() -> None:
             "group": "мальчики 2007-2008 (14,15 лет)",
             "couch": "string",
         },
-        headers={"Content-Type": "application/json"},
+        headers={"Content-Type": "application/json", "X-API-Key": "SosiBibu"},
     )
     if resp.ok:
         print("!!!   CONFIM!! ")
@@ -178,7 +179,7 @@ async def test_web_application() -> None:
     print("\nParipicant GET\n")
     resp = await con.get(
         url=HOST + "/api/v1/participants/14",
-        headers={"Content-Type": "application/json"},
+        headers={"Content-Type": "application/json", "X-API-Key": "SosiBibu"},
     )
     if resp.ok:
         print("!!!   CONFIM!! ")
@@ -189,7 +190,7 @@ async def test_web_application() -> None:
     resp = await con.get(
         url=HOST
         + "/api/v1/result_participants/?offset_type=first&offset_id=0&limit=10",
-        headers={"Content-Type": "application/json"},
+        headers={"Content-Type": "application/json", "X-API-Key": "SosiBibu"},
     )
     if resp.ok:
         print("!!!   CONFIM!! ")
@@ -199,7 +200,7 @@ async def test_web_application() -> None:
     print("\nresult Participant GET\n")
     resp = await con.get(
         url=HOST + "/api/v1/result_participants/14",
-        headers={"Content-Type": "application/json"},
+        headers={"Content-Type": "application/json", "X-API-Key": "SosiBibu"},
     )
     if resp.ok:
         print("!!!   CONFIM!! ")
@@ -210,12 +211,14 @@ async def test_web_application() -> None:
     resp = await con.post(
         url=HOST + "/api/v1/result_participants/14",
         json={"id": 0, "participant_number": 0, "point": 0},
-        headers={"Content-Type": "application/json"},
+        headers={"Content-Type": "application/json", "X-API-Key": "SosiBibu"},
     )
     if resp.ok:
         print("!!!   CONFIM!! ")
     else:
         print(await resp.json())
+
+    con.close()
 
 
 async def test_logic() -> None:
@@ -294,7 +297,7 @@ def print_results(results):
 async def test():
     # await create_user_from_csv()
     # await test_web_application()
-    # await test_logic()
+    await test_logic()
     await test_view()
 
 

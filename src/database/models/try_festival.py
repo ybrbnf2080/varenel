@@ -19,7 +19,6 @@ class TryFestivalDatabase(TimestampMixin, Base, ReprMixin):
     )  # id_участникв
     track: Mapped[int] = mapped_column(
         sa.Integer,
-        sa.ForeignKey("tracks.number", ondelete="CASCADE", onupdate="CASCADE"),
         nullable=False,
     )  # number_участникв
     result: Mapped[float] = mapped_column(sa.Float, nullable=False)  # результат

@@ -21,23 +21,34 @@ services:
   #     bridge:
 
   app:
-   build: .
+    build: .
 
-   depends_on:
-     - postgres
-   env_file:
-     - .env
-   environment:
-     - POSTGRES_HOST=postgres
-     - UPLOAD_PATH=.upload
-   ports:
-     - "8000:8000"
-   volumes:
-     - ./:/app
-   networks:
-     bridge:
-   command: [ "uvicorn", "src.api.main:api", "--port", "8000", "--host", "0.0.0.0", "--factory", "--reload" ]
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_HOST=postgres
+      - UPLOAD_PATH=.upload
+    ports:
+      - "8535:8000"
+    volumes:
+      - ./:/app
+    networks:
+      - bridge
+      - getaway
 
+    command: [ "uvicorn", "src.api.main:api", "--port", "8000", "--host", "0.0.0.0", "--factory", "--reload" ]
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.rnr-http.rule=Host(`test.rockendrolla.ru`)"
+      - "traefik.http.routers.rnr-http.entrypoints=web"
+      - "traefik.http.routers.rnr.rule=Host(`test.rockendrolla.ru`)"
+      - "traefik.http.routers.rnr.entrypoints=secureweb"
+      - "traefik.http.routers.rnr.tls.certresolver=myresolver"
+      - "traefik.http.services.rnr-app.loadbalancer.server.port=8000"
+      - traefik.docker.network=getaway
+  
   postgres:
     image: postgres:14
     restart: always
@@ -47,7 +58,7 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
     ports:
-      - ${POSTGRES_PORT}:5432
+      - 5000:5432
     volumes:
       - pg_data:/var/lib/postgresql/data/
     networks:
@@ -57,12 +68,14 @@ services:
     image: adminer
     restart: always
     ports:
-      - "8080:8080"
+      - "8999:8080"
     networks:
       bridge:
 
 networks:
   bridge:
+  getaway:
+    external: true
 
 volumes:
   pg_data:

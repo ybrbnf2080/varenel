@@ -62,6 +62,25 @@ async def create_track(
 
 
 @tracks_router.get(
+    path="/group/{group}",
+    responses={
+        status.HTTP_200_OK: {"model": List[models.Track]},
+        status.HTTP_404_NOT_FOUND: {"model": errors.NotFoundError},
+    },
+    summary="Get track",
+    description="Get track by ID",
+)
+async def get_track_by_group(
+    group: enums.Group,
+    track_service: TrackRepository = Depends(get_track_repository),
+) -> List[models.Track]:
+    """Get track by ID"""
+
+    track = await track_service.get_all_from_group(group=group)
+    return track
+
+
+@tracks_router.get(
     path="/{track_id}",
     responses={
         status.HTTP_200_OK: {"model": models.Track},
