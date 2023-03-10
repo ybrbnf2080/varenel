@@ -1,0 +1,22 @@
+# Database
+SQLAlchemy~=2.0.0b3
+asyncpg~=0.27.0
+
+
+# Migrations
+alembic[tz]~=1.8.1
+alembic-utils~=0.7.8
+alembic
+
+# Model
+pydantic~=1.10.2
+dataclass_factory~=2.16
+
+# Webserver
+fastapi~=0.87.0
+starlette==0.21.0
+uvicorn~=0.19.0
+
+# external Api
+aiohttp~=3.8.3
+
